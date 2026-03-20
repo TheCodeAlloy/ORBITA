@@ -288,7 +288,7 @@ function saveToSheets() {
     if (el) el.textContent = '⚠️ URL pre Google Sheets nie je nastavené.';
     return;
   }
-  fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+  fetch(SHEET_SCRIPT_URL + '?kviz=orbita', { method: 'POST', body: JSON.stringify(payload) })
     .then(() => { const el = document.getElementById('savingMsg'); if (el) el.textContent = '✓ Výsledky boli uložené.'; })
     .catch(() => { const el = document.getElementById('savingMsg'); if (el) el.textContent = '✗ Ukladanie zlyhalo.'; });
 }

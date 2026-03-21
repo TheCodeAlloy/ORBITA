@@ -3,294 +3,190 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Orbita – Kvíz 2</title>
+<title>Orbita – Overovaci kviz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Arial, sans-serif; background: #f0f4f8; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-  .quiz-container { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.10); max-width: 720px; width: 100%; padding: 36px 40px; }
-  .quiz-header { margin-bottom: 28px; }
-  .quiz-header h1 { font-size: 22px; color: #1a2e4a; font-weight: 700; margin-bottom: 4px; }
-  .quiz-header p { font-size: 14px; color: #6b7280; }
-  .progress-bar-wrap { background: #e5e7eb; border-radius: 99px; height: 6px; margin-bottom: 28px; }
-  .progress-bar { background: #1d4ed8; border-radius: 99px; height: 6px; transition: width 0.4s; }
-  .question-num { font-size: 12px; color: #6b7280; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
-  .question-text { font-size: 17px; color: #1a2e4a; font-weight: 600; margin-bottom: 22px; line-height: 1.5; }
-  .options { display: flex; flex-direction: column; gap: 10px; }
-  .option-btn { background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 14px 18px; text-align: left; cursor: pointer; font-size: 15px; color: #1a2e4a; display: flex; align-items: flex-start; gap: 12px; transition: border-color 0.15s, background 0.15s; }
-  .option-btn:hover:not(:disabled) { border-color: #1d4ed8; background: #eff6ff; }
-  .option-btn .opt-letter { font-weight: 700; color: #1d4ed8; min-width: 20px; }
-  .option-btn.correct { border-color: #16a34a; background: #f0fdf4; }
-  .option-btn.correct .opt-letter { color: #16a34a; }
-  .option-btn.wrong { border-color: #dc2626; background: #fef2f2; }
-  .option-btn.wrong .opt-letter { color: #dc2626; }
-  .option-btn:disabled { cursor: default; }
-  .nav-row { display: flex; justify-content: flex-end; margin-top: 28px; }
-  .btn-next { background: #1d4ed8; color: #fff; border: none; border-radius: 8px; padding: 12px 28px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
-  .btn-next:hover { background: #1e40af; }
-  .btn-next:disabled { background: #93c5fd; cursor: default; }
-  .result-screen { text-align: center; padding: 20px 0; }
-  .score-circle { width: 120px; height: 120px; border-radius: 50%; border: 6px solid #1d4ed8; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; flex-direction: column; }
-  .score-circle .score-num { font-size: 32px; font-weight: 700; color: #1d4ed8; }
-  .score-circle .score-den { font-size: 14px; color: #6b7280; }
-  .result-screen h2 { font-size: 22px; color: #1a2e4a; margin-bottom: 8px; }
-  .result-screen p { font-size: 15px; color: #6b7280; margin-bottom: 24px; }
-  .dots-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
-  .dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
-  .dot.ok { background: #16a34a; }
-  .dot.fail { background: #dc2626; }
-  .btn-restart { background: #1d4ed8; color: #fff; border: none; border-radius: 8px; padding: 12px 32px; font-size: 15px; font-weight: 600; cursor: pointer; }
-  .btn-restart:hover { background: #1e40af; }
-  .saving-msg { font-size: 13px; color: #6b7280; margin-top: 12px; }
-  .name-screen { text-align: center; padding: 10px 0 20px; }
-  .name-screen h2 { font-size: 20px; color: #1a2e4a; margin-bottom: 8px; }
-  .name-screen p { font-size: 14px; color: #6b7280; margin-bottom: 20px; }
-  .name-input { width: 100%; padding: 12px 16px; border: 1.5px solid #e5e7eb; border-radius: 8px; font-size: 15px; margin-bottom: 16px; }
-  .name-input:focus { outline: none; border-color: #1d4ed8; }
-  .btn-start { background: #1d4ed8; color: #fff; border: none; border-radius: 8px; padding: 12px 32px; font-size: 15px; font-weight: 600; cursor: pointer; }
-  .btn-start:hover { background: #1e40af; }
+  :root {
+    --bg:#f4f3ef; --surface:#fff; --navy:#1a2340; --navy-mid:#263354;
+    --accent:#2f6de0; --accent-light:#e8effe;
+    --correct:#16a34a; --correct-light:#f0fdf4;
+    --wrong:#b91c1c; --wrong-light:#fef2f2;
+    --text:#1a2340; --text-muted:#6b7280; --border:#e2e1dc;
+    --shadow:0 4px 24px rgba(26,35,64,0.09);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Sora',sans-serif;background:var(--bg);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px}
+  .topbar{width:100%;max-width:680px;display:flex;align-items:center;gap:12px;margin-bottom:28px}
+  .topbar-logo{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.08em;background:var(--navy);color:#fff;padding:5px 12px;border-radius:4px}
+  .topbar-title{font-size:13px;color:var(--text-muted);letter-spacing:.03em}
+  .card{background:var(--surface);border-radius:16px;box-shadow:var(--shadow);width:100%;max-width:680px;overflow:hidden;border:1px solid var(--border)}
+  .card-header{background:var(--navy);padding:28px 36px 24px}
+  .card-header h1{font-size:22px;font-weight:700;color:#fff;line-height:1.25}
+  .card-header p{margin-top:6px;font-size:13.5px;color:rgba(255,255,255,0.6);font-weight:300}
+  .card-body{padding:36px}
+  .progress-wrap{margin-bottom:28px}
+  .progress-label{display:flex;justify-content:space-between;font-size:12px;font-weight:500;letter-spacing:.06em;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px}
+  .progress-bar-bg{height:4px;background:var(--border);border-radius:99px;overflow:hidden}
+  .progress-bar-fill{height:100%;background:var(--accent);border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+  .field{margin-bottom:20px}
+  .field label{display:block;font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:7px}
+  .field input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:'Sora',sans-serif;font-size:15px;color:var(--text);outline:none;transition:border-color .2s;background:var(--bg)}
+  .field input:focus{border-color:var(--accent);background:#fff}
+  .field input.error{border-color:var(--wrong)}
+  .start-icon{width:56px;height:56px;background:var(--accent-light);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:20px}
+  .start-screen h2{font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px}
+  .start-screen p{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:28px}
+  .info-chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}
+  .chip{background:var(--accent-light);color:var(--accent);font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:99px;letter-spacing:.02em}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:10px;font-family:'Sora',sans-serif;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all .18s ease;letter-spacing:.01em}
+  .btn-primary{background:var(--navy);color:#fff}
+  .btn-primary:hover{background:var(--navy-mid);transform:translateY(-1px);box-shadow:0 6px 18px rgba(26,35,64,.2)}
+  .btn-primary:active{transform:translateY(0)}
+  .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn-lg{padding:15px 32px;font-size:16px}
+  .btn-full{width:100%;justify-content:center}
+  .q-number{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;margin-bottom:10px}
+  .q-text{font-size:18px;font-weight:600;color:var(--text);line-height:1.45;margin-bottom:24px}
+  .options{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+  .option-btn{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .18s ease;background:#fff;font-family:'Sora',sans-serif;font-size:14.5px;color:var(--text);text-align:left;width:100%}
+  .option-btn:hover:not(:disabled){border-color:var(--accent);background:var(--accent-light);transform:translateX(3px)}
+  .option-btn.correct{border-color:var(--correct);background:var(--correct-light)}
+  .option-btn.correct .opt-letter{background:var(--correct);border-color:var(--correct);color:#fff}
+  .option-btn.wrong{border-color:var(--wrong);background:var(--wrong-light)}
+  .option-btn.wrong .opt-letter{background:var(--wrong);border-color:var(--wrong);color:#fff}
+  .option-btn:disabled{cursor:default;transform:none}
+  .opt-letter{flex-shrink:0;width:28px;height:28px;border-radius:8px;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--text-muted);transition:all .18s;margin-top:1px}
+  .option-btn:hover:not(:disabled) .opt-letter{background:var(--accent);border-color:var(--accent);color:#fff}
+  .opt-text{padding-top:4px;line-height:1.5}
+  .nav-row{display:flex;justify-content:flex-end;align-items:center;gap:12px}
+  .result-screen{text-align:center;padding:8px 0 24px}
+  .score-circle{width:120px;height:120px;border-radius:50%;border:6px solid var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;flex-direction:column}
+  .score-circle .score-num{font-size:32px;font-weight:700;color:var(--navy)}
+  .score-circle .score-den{font-size:14px;color:var(--text-muted);font-weight:500}
+  .result-screen h2{font-size:22px;color:var(--text);margin-bottom:8px;font-weight:700}
+  .result-sub{font-size:14px;color:var(--text-muted);margin-bottom:28px}
+  .dots-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+  .dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace}
+  .dot.ok{background:var(--correct)}
+  .dot.fail{background:var(--wrong)}
+  .saving-msg{font-size:13px;color:var(--text-muted);margin-top:16px}
+  @media(max-width:500px){.card-body{padding:24px 20px}.card-header{padding:22px 20px 18px}.q-text{font-size:16px}}
 </style>
 </head>
 <body>
-<div class="quiz-container" id="app"></div>
+<div class="topbar">
+  <span class="topbar-logo">ORBITA</span>
+  <span class="topbar-title">Overovaci kviz &ndash; system Orbita</span>
+</div>
+<div class="card">
+  <div class="card-header">
+    <h1>Vedomostny kviz</h1>
+    <p>System Orbita &middot; Online zber dat od zamestnávatelov</p>
+  </div>
+  <div class="card-body" id="app"></div>
+</div>
 <script>
-const SHEET_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwmkbcUbyT0dZo07_CUS57LqQMct5EuKeybbT4KyWHNvxp2gL2KCpLxki-gASEf2LlUtw/exec?kviz=orbita';
 
 const questions = [
-  {
-    q: "Ktoré údaje musí respondent zadať v prvom kroku prihlasovania do systému Orbita?",
-    opts: [
-      "IČO, e-mailovú adresu a pridelený bezpečnostný kód.",
-      "IČO organizácie a rodné číslo štatutárneho zástupcu.",
-      "E-mailovú adresu a telefónne číslo pre SMS overenie.",
-      "Meno používateľa, heslo a kód sektora."
-    ],
-    correct: 0
-  },
-  {
-    q: "Ako systém Orbita zaisťuje, aby nedochádzalo k duplikácii dát, ak má zamestnávateľ viacero zástupcov?",
-    opts: [
-      "Systém pri uložení porovnáva časy zápisov a ponechá len ten novší.",
-      "Systém automaticky uzamkne sekciu, ktorú práve niekto iný vypĺňa.",
-      "Dáta môže finálne odoslať len jeden hlavný administrátor za firmu.",
-      "Každému zástupcovi musia byť pridelené výhradne jedinečné sekcie."
-    ],
-    correct: 3
-  },
-  {
-    q: "Čo signalizuje sivý bod na dlaždici formulára na hlavnej obrazovke?",
-    opts: [
-      "Údaje v tejto sekcii sú pre daného zamestnávateľa dobrovoľné.",
-      "Prístup k tejto sekcii bol administrátorom dočasne pozastavený.",
-      "Formulár ešte nebol vyplnený a neobsahuje dátum odoslania.",
-      "Formulár je rozpracovaný a dáta sú uložené v dočasnej pamäti."
-    ],
-    correct: 2
-  },
-  {
-    q: "Ktorá funkcia výrazne urýchľuje prácu pri vypĺňaní rozsiahlych číselných tabuliek?",
-    opts: [
-      "Hromadné odoslanie všetkých tabuliek naraz bez kontroly prázdnych polí.",
-      "Možnosť importu dát priamo z účtovného softvéru organizácie.",
-      "Funkcia automatického odhadu hodnôt na základe predošlých rokov.",
-      "Tlačidlo \"Doplniť nuly\" pre automatické vyplnenie prázdnych buniek."
-    ],
-    correct: 3
-  },
-  {
-    q: "Za akých podmienok sa vo formulári \"Pilier 5\" zobrazia podotázky číslo 8 až 12?",
-    opts: [
-      "Sú viditeľné len pre zamestnávateľov s viac ako 50 zamestnancami.",
-      "Zobrazia sa automaticky po vyplnení prvých troch otázok formulára.",
-      "Zobrazia sa až po kliknutí na tlačidlo \"Odoslať\" ako doplňujúci prieskum.",
-      "Zobrazia sa len vtedy, ak respondent na otázku č. 4 odpovie \"Áno\"."
-    ],
-    correct: 3
-  },
-  {
-    q: "Čo sa stane s pôvodnými dátami v databáze, ak respondent po úspešnom odoslaní zmení hodnoty a formulár odošle znova?",
-    opts: [
-      "Nové odoslanie bude zamietnuté z dôvodu existencie už vyplnených dát.",
-      "Pôvodné dáta sa vymažú a administrátor musí manuálne schváliť nové vloženie.",
-      "Systém vytvorí nový, samostatný záznam a pôvodný ponechá na archiváciu.",
-      "Pôvodný záznam v databáze sa prepíše aktualizovanými hodnotami."
-    ],
-    correct: 3
-  },
-  {
-    q: "Ktorá časť systému Orbita obsahuje jediné nepovinné polia v celom dotazníku?",
-    opts: [
-      "Identifikačné údaje o zástupcovi zamestnávateľa na hlavnej obrazovke.",
-      "Dátumy narodenia zamestnancov v sekcii \"Základné údaje\".",
-      "Položky pre uvedenie ďalších benefitov v deviatej časti tabuľky A13.",
-      "Poznámky k počtu zamestnancov pracujúcich v noci v tabuľke A01."
-    ],
-    correct: 2
-  },
-  {
-    q: "Prečo je dôležité, aby sektorový špecialista po dokončení prác deaktivoval záznam zamestnávateľa?",
-    opts: [
-      "Uvoľní sa tým licencované miesto v systéme pre iného respondenta.",
-      "Tento krok automaticky vygeneruje certifikát o úspešnom absolvovaní prieskumu.",
-      "Dôjde k okamžitému zmazaniu citlivých údajov z centrálnej databázy.",
-      "Zabezpečí sa tým finálnosť dát, hoci záznam v systéme zostane zachovaný."
-    ],
-    correct: 3
-  },
-  {
-    q: "Pri vypĺňaní tabuľky A01 (Prehľad štruktúry zamestnancov) – čo z nasledujúceho platí?",
-    opts: [
-      "Každý zamestnanec musí mať uvedené aspoň dve rôzne úrovne najvyššieho vzdelania.",
-      "Vekové kohorty sa musia povinne vypĺňať od najstarších zamestnancov po najmladších.",
-      "Počty zamestnancov pracujúcich v noci nesmú presiahnuť celkový počet v danej vekovej kohorte.",
-      "Súčet mužov a žien musí byť o 5 % nižší ako súčet podľa vzdelania kvôli fluktuácii."
-    ],
-    correct: 2
-  },
-  {
-    q: "Čo umožňuje respondentovi tlačidlo \"Späť\" umiestnené vo formulároch?",
-    opts: [
-      "Vrátiť sa na hlavnú obrazovku bez uloženia práve zadaných dát.",
-      "Odvolať už odoslaný a uložený formulár z centrálnej databázy.",
-      "Automaticky opraviť logické chyby v číselných tabuľkách.",
-      "Zobraziť predchádzajúci krok viacfaktorového overovania pri prihlasovaní."
-    ],
-    correct: 0
-  }
+  { q: "Ktore udaje musi respondent zadat v prvom kroku prihlasovania do systemu Orbita?", opts: ["ICO, e-mailovu adresu a prideleny bezpecnostny kod.", "ICO organizacie a rodne cislo statutarneho zastupcu.", "E-mailovu adresu a telefonne cislo pre SMS overenie.", "Meno pouzivatela, heslo a kod sektora."], correct: 0 },
+  { q: "Ako system Orbita zaistuje, aby nedochadzalo k duplikacii dat, ak ma zamestnavatel viacero zastupov?", opts: ["System pri ulozeni porovnava casy zapisov a ponecha len ten novsi.", "System automaticky uzamkne sekciu, ktoru prave niekto iny vypĺna.", "Data moze finalne odoslat len jeden hlavny administrator za firmu.", "Kazdemu zastupcovi musia byt pridelene vyhradne jedinecne sekcie."], correct: 3 },
+  { q: "Co signalizuje sivy bod na dlazdici formulara na hlavnej obrazovke?", opts: ["Udaje v tejto sekcii su pre daneho zamestnavatela dobrovolne.", "Pristup k tejto sekcii bol administratorom docasne pozastaveny.", "Formular este nebol vyplneny a neobsahuje datum odoslania.", "Formular je rozpracovany a data su ulozene v docasnej pamati."], correct: 2 },
+  { q: "Ktora funkcia vyrazne urychluje pracu pri vypĺnani rozsiahlych ciselnych tabuliek?", opts: ["Hromadne odoslanie vsetkych tabuliek naraz bez kontroly prazdnych poli.", "Moznost importu dat priamo z uctovneho softveru organizacie.", "Funkcia automatickeho odhadu hodnot na zaklade predoslych rokov.", "Tlacidlo Doplnit nuly pre automaticke vyplnenie prazdnych buniek."], correct: 3 },
+  { q: "Za akych podmienok sa vo formulari Pilier 5 zobrazia podotazky cislo 8 az 12?", opts: ["Su viditelne len pre zamestnavatelov s viac ako 50 zamestnancami.", "Zobrazia sa automaticky po vyplneni prvych troch otazok formulara.", "Zobrazia sa az po kliknuti na tlacidlo Odoslat ako doplnujuci prieskum.", "Zobrazia sa len vtedy, ak respondent na otazku c. 4 odpovie Ano."], correct: 3 },
+  { q: "Co sa stane s povodnymi datami v databaze, ak respondent po uspesnom odoslani zmeni hodnoty a formular odsle znova?", opts: ["Nove odoslanie bude zamietute z dovodu existencie uz vyplnenych dat.", "Povodne data sa vymazú a administrator musi manualne schvalit nove vlozenie.", "System vytvorí novy, samostatny zaznam a povodny ponecha na archivaciu.", "Povodny zaznam v databaze sa prepise aktualizovanymi hodnotami."], correct: 3 },
+  { q: "Ktora cast systemu Orbita obsahuje jedine nepovinne polia v celom dotazniku?", opts: ["Identifikacne udaje o zastupcovi zamestnavatela na hlavnej obrazovke.", "Datumy narodenia zamestnancov v sekcii Zakladne udaje.", "Polozky pre uvedenie dalsich benefitov v deviatej casti tabulky A13.", "Poznamky k poctu zamestnancov pracujucich v noci v tabulke A01."], correct: 2 },
+  { q: "Preco je dolezite, aby sektorovy specialista po dokonceni prac deaktivoval zaznam zamestnavatela?", opts: ["Uvolni sa tym licencovane miesto v systeme pre ineho respondenta.", "Tento krok automaticky vygeneruje certifikat o uspesnom absolvovani prieskumu.", "Dojde k okamzitemu zmazaniu citlivych udajov z centralnej databazy.", "Zabezpeci sa tym finalnost dat, hoci zaznam v systeme zostane zachovany."], correct: 3 },
+  { q: "Pri vypĺnani tabulky A01 (Prehlad struktury zamestnancov) – co z nasledujuceho plati?", opts: ["Kazdy zamestnanec musi mat uvedene aspon dve rozne urovne najvyssieho vzdelania.", "Vekove kohorty sa musia povinne vypĺnat od najstarsich zamestnancov po najmladších.", "Pocty zamestnancov pracujucich v noci nesmu presahnut celkovy pocet v danej vekovej kohorte.", "Sucet muzov a zien musi byt o 5 percient nizsi ako sucet podla vzdelania kvoli fluktuacii."], correct: 2 },
+  { q: "Co umoznuje respondentovi tlacidlo Spat umiestnene vo formularoch?", opts: ["Vratit sa na hlavnu obrazovku bez ulozenia prave zadanych dat.", "Odvolat uz odoslany a ulozeny formular z centralnej databazy.", "Automaticky opravit logicke chyby v ciselnych tabulkach.", "Zobrazit predchadzajuci krok viacfaktoroveho overovania pri prihlasovani."], correct: 0 }
 ];
 
-let current = 0;
-let answers = [];
-let selected = null;
-let answered = false;
-let userName = '';
-let phase = 'name';
+let current=0,answers=[],selected=null,answered=false,userName='',phase='name';
+const labels=['A','B','C','D'];
 
-const labels = ['A', 'B', 'C', 'D'];
-
-function render() {
-  const app = document.getElementById('app');
-  if (phase === 'name') { renderName(app); return; }
-  if (phase === 'quiz') { renderQuiz(app); return; }
-  if (phase === 'result') { renderResult(app); return; }
+function render(){
+  const app=document.getElementById('app');
+  if(phase==='name'){renderName(app);return;}
+  if(phase==='quiz'){renderQuiz(app);return;}
+  if(phase==='result'){renderResult(app);return;}
 }
 
-function renderName(app) {
-  app.innerHTML = `
-    <div class="name-screen">
-      <div class="quiz-header">
-        <h1>Orbita – Kvíz 2</h1>
-        <p>Overte si znalosti zo systému Orbita</p>
-      </div>
-      <p>Pred začatím zadajte svoje meno a priezvisko</p>
-      <input class="name-input" id="nameInput" type="text" placeholder="Meno a priezvisko" />
-      <br>
-      <button class="btn-start" id="btnStart">Začať kvíz</button>
-    </div>`;
-  document.getElementById('btnStart').onclick = () => {
-    const val = document.getElementById('nameInput').value.trim();
-    if (!val) { document.getElementById('nameInput').style.borderColor = '#dc2626'; return; }
-    userName = val;
-    phase = 'quiz';
-    render();
+function renderName(app){
+  app.innerHTML=`<div class="start-screen">
+    <div class="start-icon">&#128203;</div>
+    <h2>Pripraveni zacat?</h2>
+    <p>Tento kviz overuje znalost systemu Orbita. Otazky sa zobrazuju postupne, spravne odpovede nie su zobrazene.</p>
+    <div class="info-chips"><span class="chip">10 otazok</span><span class="chip">Jedna spravna odpoved</span><span class="chip">Vysledok po dokonceni</span></div>
+    <div class="field"><label>Vase meno</label><input type="text" id="nameInput" placeholder="Zadajte meno a priezvisko" autocomplete="name"/></div>
+    <button class="btn btn-primary btn-lg btn-full" id="btnStart">Spustit kviz &#8594;</button>
+  </div>`;
+  document.getElementById('btnStart').onclick=()=>{
+    const inp=document.getElementById('nameInput');
+    inp.classList.remove('error');
+    if(!inp.value.trim()){inp.classList.add('error');inp.focus();return;}
+    userName=inp.value.trim();phase='quiz';render();
   };
-  document.getElementById('nameInput').onkeydown = e => { if (e.key === 'Enter') document.getElementById('btnStart').click(); };
+  document.getElementById('nameInput').onkeydown=e=>{if(e.key==='Enter')document.getElementById('btnStart').click();};
 }
 
-function renderQuiz(app) {
-  const q = questions[current];
-  const pct = Math.round((current / questions.length) * 100);
-  let optsHtml = q.opts.map((o, i) => {
-    let cls = 'option-btn';
-    if (answered) {
-      if (i === q.correct) cls += ' correct';
-      else if (i === selected) cls += ' wrong';
-    }
-    return `<button class="${cls}" ${answered ? 'disabled' : ''} data-i="${i}">
-      <span class="opt-letter">${labels[i]}.</span>
-      <span>${o}</span>
-    </button>`;
+function renderQuiz(app){
+  const q=questions[current];
+  const pct=Math.round((current/questions.length)*100);
+  const optsHtml=q.opts.map((o,i)=>{
+    let cls='option-btn';
+    if(answered){if(i===q.correct)cls+=' correct';else if(i===selected)cls+=' wrong';}
+    return `<button class="${cls}" ${answered?'disabled':''} data-i="${i}"><span class="opt-letter">${labels[i]}</span><span class="opt-text">${o}</span></button>`;
   }).join('');
-
-  app.innerHTML = `
-    <div class="quiz-header">
-      <h1>Orbita – Kvíz 2</h1>
-      <p>Prihlásený: <strong>${userName}</strong></p>
+  app.innerHTML=`
+    <div class="progress-wrap">
+      <div class="progress-label"><span>Otazka ${current+1} z ${questions.length}</span><span>${pct} %</span></div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
     </div>
-    <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
-    <div class="question-num">Otázka ${current + 1} / ${questions.length}</div>
-    <div class="question-text">${q.q}</div>
+    <div class="q-number">Otazka ${String(current+1).padStart(2,'0')}</div>
+    <div class="q-text">${q.q}</div>
     <div class="options">${optsHtml}</div>
     <div class="nav-row">
-      <button class="btn-next" id="btnNext" ${!answered ? 'disabled' : ''}>${current < questions.length - 1 ? 'Ďalšia otázka →' : 'Zobraziť výsledky'}</button>
+      <button class="btn btn-primary" id="btnNext" ${!answered?'disabled':''}>${current<questions.length-1?'Dalsia otazka &#8594;':'Zobrazit vysledky &#10003;'}</button>
     </div>`;
-
-  app.querySelectorAll('.option-btn').forEach(btn => {
-    btn.onclick = () => {
-      if (answered) return;
-      selected = parseInt(btn.dataset.i);
-      answered = true;
-      answers.push({ q: current, sel: selected, correct: questions[current].correct });
+  app.querySelectorAll('.option-btn').forEach(btn=>{
+    btn.onclick=()=>{
+      if(answered)return;
+      selected=parseInt(btn.dataset.i);answered=true;
+      answers.push({q:current,sel:selected,correct:questions[current].correct});
       render();
     };
   });
-
-  document.getElementById('btnNext').onclick = () => {
-    if (current < questions.length - 1) {
-      current++;
-      selected = null;
-      answered = false;
-      render();
-    } else {
-      phase = 'result';
-      render();
-      saveToSheets();
-    }
+  document.getElementById('btnNext').onclick=()=>{
+    if(current<questions.length-1){current++;selected=null;answered=false;render();}
+    else{phase='result';render();saveToSheets();}
   };
 }
 
-function renderResult(app) {
-  const score = answers.filter(a => a.sel === a.correct).length;
-  const pct = Math.round((score / questions.length) * 100);
-  let msg = pct === 100 ? 'Výborný výsledok!' : pct >= 70 ? 'Dobrý výsledok!' : 'Je čo zlepšovať.';
-  const dots = answers.map((a, i) => `<div class="dot ${a.sel === a.correct ? 'ok' : 'fail'}" title="Otázka ${i+1}">${i+1}</div>`).join('');
-  app.innerHTML = `
-    <div class="result-screen">
-      <div class="score-circle">
-        <span class="score-num">${score}</span>
-        <span class="score-den">z ${questions.length}</span>
-      </div>
-      <h2>${msg}</h2>
-      <p>${userName} – správnych odpovedí: ${score} / ${questions.length} (${pct} %)</p>
-      <div class="dots-row">${dots}</div>
-      <button class="btn-restart" id="btnRestart">Zopakovať kvíz</button>
-      <p class="saving-msg" id="savingMsg">Ukladám výsledky...</p>
-    </div>`;
-  document.getElementById('btnRestart').onclick = () => {
-    current = 0; answers = []; selected = null; answered = false; phase = 'name';
-    render();
-  };
+function renderResult(app){
+  const score=answers.filter(a=>a.sel===a.correct).length;
+  const pct=Math.round((score/questions.length)*100);
+  const msg=pct===100?'Vyborny vysledok!':pct>=70?'Dobry vysledok!':'Je co zlepsovat.';
+  const dots=answers.map((a,i)=>`<div class="dot ${a.sel===a.correct?'ok':'fail'}" title="Otazka ${i+1}">${i+1}</div>`).join('');
+  app.innerHTML=`<div class="result-screen">
+    <div class="score-circle"><span class="score-num">${score}</span><span class="score-den">z ${questions.length}</span></div>
+    <h2>${msg}</h2>
+    <p class="result-sub">${userName} &ndash; spravnych odpovedi: ${score} / ${questions.length} (${pct}&nbsp;%)</p>
+    <div class="dots-row">${dots}</div>
+    <button class="btn btn-primary btn-lg" id="btnRestart">&#8635; Zopakovat kviz</button>
+    <p class="saving-msg" id="savingMsg">Ukladam vysledky...</p>
+  </div>`;
+  document.getElementById('btnRestart').onclick=()=>{current=0;answers=[];selected=null;answered=false;phase='name';render();};
 }
 
-function saveToSheets() {
-  const score = answers.filter(a => a.sel === a.correct).length;
-  const answerCodes = answers.map((a, i) => (i + 1) + ':' + ['A','B','C','D'][a.sel]).join(', ');
-  const now = new Date().toLocaleString('sk-SK');
-  const payload = {
-    sheet: 'ORBITA',
-    meno: userName,
-    odpovede: answerCodes,
-    spravne: score,
-    celkovo: questions.length,
-    timestamp: now
-  };
-  if (!SHEET_SCRIPT_URL || SHEET_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
-    const el = document.getElementById('savingMsg');
-    if (el) el.textContent = '⚠️ URL pre Google Sheets nie je nastavené.';
-    return;
-  }
-  fetch(SHEET_SCRIPT_URL + '?kviz=orbita', { method: 'POST', body: JSON.stringify(payload) })
-    .then(() => { const el = document.getElementById('savingMsg'); if (el) el.textContent = '✓ Výsledky boli uložené.'; })
-    .catch(() => { const el = document.getElementById('savingMsg'); if (el) el.textContent = '✗ Ukladanie zlyhalo.'; });
+function saveToSheets(){
+  const score=answers.filter(a=>a.sel===a.correct).length;
+  const answerCodes=answers.map((a,i)=>(i+1)+':'+labels[a.sel]).join(', ');
+  const now=new Date().toLocaleString('sk-SK');
+  const payload={sheet:'ORBITA',meno:userName,odpovede:answerCodes,spravne:score,celkovo:questions.length,timestamp:now};
+  fetch(SHEET_SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)})
+    .then(()=>{const el=document.getElementById('savingMsg');if(el)el.textContent='✓ Vysledky boli ulozene.';})
+    .catch(()=>{const el=document.getElementById('savingMsg');if(el)el.textContent='✗ Ukladanie zlyhalo.';});
 }
 
 render();

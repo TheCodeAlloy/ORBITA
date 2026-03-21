@@ -10,8 +10,6 @@
   :root {
     --bg:#f4f3ef; --surface:#fff; --navy:#1a2340; --navy-mid:#263354;
     --accent:#2f6de0; --accent-light:#e8effe;
-    --correct:#16a34a; --correct-light:#f0fdf4;
-    --wrong:#b91c1c; --wrong-light:#fef2f2;
     --text:#1a2340; --text-muted:#6b7280; --border:#e2e1dc;
     --shadow:0 4px 24px rgba(26,35,64,0.09);
   }
@@ -51,10 +49,6 @@
   .options{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
   .option-btn{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .18s ease;background:#fff;font-family:'Sora',sans-serif;font-size:14.5px;color:var(--text);text-align:left;width:100%}
   .option-btn:hover:not(:disabled){border-color:var(--accent);background:var(--accent-light);transform:translateX(3px)}
-  .option-btn.correct{border-color:var(--correct);background:var(--correct-light)}
-  .option-btn.correct .opt-letter{background:var(--correct);border-color:var(--correct);color:#fff}
-  .option-btn.wrong{border-color:var(--wrong);background:var(--wrong-light)}
-  .option-btn.wrong .opt-letter{background:var(--wrong);border-color:var(--wrong);color:#fff}
   .option-btn:disabled{cursor:default;transform:none}
   .opt-letter{flex-shrink:0;width:28px;height:28px;border-radius:8px;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--text-muted);transition:all .18s;margin-top:1px}
   .option-btn:hover:not(:disabled) .opt-letter{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -135,7 +129,7 @@ function renderQuiz(app){
   const pct=Math.round((current/questions.length)*100);
   const optsHtml=q.opts.map((o,i)=>{
     let cls='option-btn';
-    if(answered){if(i===q.correct)cls+=' correct';else if(i===selected)cls+=' wrong';}
+    if(answered && i===selected){cls+=' selected-only';}
     return `<button class="${cls}" ${answered?'disabled':''} data-i="${i}"><span class="opt-letter">${labels[i]}</span><span class="opt-text">${o}</span></button>`;
   }).join('');
   app.innerHTML=`
@@ -147,17 +141,19 @@ function renderQuiz(app){
     <div class="q-text">${q.q}</div>
     <div class="options">${optsHtml}</div>
     <div class="nav-row">
-      <button class="btn btn-primary" id="btnNext" ${!answered?'disabled':''}>${current<questions.length-1?'Dalsia otazka &#8594;':'Zobrazit vysledky &#10003;'}</button>
+      <button class="btn btn-primary" id="btnNext" ${!answered?'disabled':''}>${current<questions.length-1?'&#270;alej &#8594;':'Zobrazit vysledky &#10003;'}</button>
     </div>`;
   app.querySelectorAll('.option-btn').forEach(btn=>{
     btn.onclick=()=>{
-      if(answered)return;
-      selected=parseInt(btn.dataset.i);answered=true;
-      answers.push({q:current,sel:selected,correct:questions[current].correct});
-      render();
+      selected=parseInt(btn.dataset.i);
+      document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('selected-only'));
+      btn.classList.add('selected-only');
+      document.getElementById('btnNext').disabled=false;
     };
   });
   document.getElementById('btnNext').onclick=()=>{
+    if(selected===null)return;
+    answers.push({q:current,sel:selected,correct:questions[current].correct});
     if(current<questions.length-1){current++;selected=null;answered=false;render();}
     else{phase='result';render();saveToSheets();}
   };

@@ -61,15 +61,15 @@
   .opt-text{padding-top:4px;line-height:1.5}
   .nav-row{display:flex;justify-content:flex-end;align-items:center;gap:12px}
   .result-screen{text-align:center;padding:8px 0 24px}
-  .score-circle{width:120px;height:120px;border-radius:50%;border:6px solid var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;flex-direction:column}
-  .score-circle .score-num{font-size:32px;font-weight:700;color:var(--navy)}
-  .score-circle .score-den{font-size:14px;color:var(--text-muted);font-weight:500}
+  .score-ring{width:120px;height:120px;position:relative;margin:0 auto 24px}
+  .score-ring svg{position:absolute;top:0;left:0}
+  .score-ring-inner{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .score-num{font-size:34px;font-weight:700;color:var(--navy);line-height:1}
+  .score-den{font-size:14px;color:var(--text-muted);font-weight:500}
   .result-screen h2{font-size:22px;color:var(--text);margin-bottom:8px;font-weight:700}
   .result-sub{font-size:14px;color:var(--text-muted);margin-bottom:28px}
-  .dots-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
-  .dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;font-family:'JetBrains Mono',monospace}
-  .dot.ok{background:var(--correct)}
-  .dot.fail{background:var(--wrong)}
+  .option-btn.selected-only{border-color:var(--accent);background:var(--accent-light)}
+  .option-btn.selected-only .opt-letter{background:var(--accent);border-color:var(--accent);color:#fff}
   .saving-msg{font-size:13px;color:var(--text-muted);margin-top:16px}
   @media(max-width:500px){.card-body{padding:24px 20px}.card-header{padding:22px 20px 18px}.q-text{font-size:16px}}
 </style>
@@ -167,12 +167,22 @@ function renderResult(app){
   const score=answers.filter(a=>a.sel===a.correct).length;
   const pct=Math.round((score/questions.length)*100);
   const msg=pct===100?'Vyborny vysledok!':pct>=70?'Dobry vysledok!':'Je co zlepsovat.';
-  const dots=answers.map((a,i)=>`<div class="dot ${a.sel===a.correct?'ok':'fail'}" title="Otazka ${i+1}">${i+1}</div>`).join('');
   app.innerHTML=`<div class="result-screen">
-    <div class="score-circle"><span class="score-num">${score}</span><span class="score-den">z ${questions.length}</span></div>
+    <div class="score-ring">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="52" fill="none" stroke="#e2e1dc" stroke-width="8"/>
+        <circle cx="60" cy="60" r="52" fill="none" stroke="#2f6de0" stroke-width="8"
+          stroke-dasharray="327" stroke-dashoffset="${Math.round(327-(pct/100)*327)}"
+          stroke-linecap="round" transform="rotate(-90 60 60)"
+          style="${pct>=80?'stroke:#1b7a4a':pct>=50?'stroke:#2f6de0':'stroke:#b91c1c'}"/>
+      </svg>
+      <div class="score-ring-inner">
+        <div class="score-num">${score}</div>
+        <div class="score-den">z ${questions.length}</div>
+      </div>
+    </div>
     <h2>${msg}</h2>
     <p class="result-sub">${userName} &ndash; spravnych odpovedi: ${score} / ${questions.length} (${pct}&nbsp;%)</p>
-    <div class="dots-row">${dots}</div>
     <button class="btn btn-primary btn-lg" id="btnRestart">&#8635; Zopakovat kviz</button>
     <p class="saving-msg" id="savingMsg">Ukladam vysledky...</p>
   </div>`;

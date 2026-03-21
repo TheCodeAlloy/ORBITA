@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Orbita – Kvíz</title>
+<title>Orbita – Kvíz 2</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Arial, sans-serif; background: #f0f4f8; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
@@ -53,7 +53,7 @@
 <body>
 <div class="quiz-container" id="app"></div>
 <script>
-const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwmkbcUbyT0dZo07_CUS57LqQMct5EuKeybbT4KyWHNvxp2gL2KCpLxki-gASEf2LlUtw/exec?kviz=orbita';
+const SHEET_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
 
 const questions = [
   {
@@ -92,17 +92,17 @@ const questions = [
       "Hromadné odoslanie všetkých tabuliek naraz bez kontroly prázdnych polí.",
       "Možnosť importu dát priamo z účtovného softvéru organizácie.",
       "Funkcia automatického odhadu hodnôt na základe predošlých rokov.",
-      "Tlačidlo „Doplniť nuly" pre automatické vyplnenie prázdnych buniek."
+      "Tlačidlo \"Doplniť nuly\" pre automatické vyplnenie prázdnych buniek."
     ],
     correct: 3
   },
   {
-    q: "Za akých podmienok sa vo formulári „Pilier 5" zobrazia podotázky číslo 8 až 12?",
+    q: "Za akých podmienok sa vo formulári \"Pilier 5\" zobrazia podotázky číslo 8 až 12?",
     opts: [
       "Sú viditeľné len pre zamestnávateľov s viac ako 50 zamestnancami.",
       "Zobrazia sa automaticky po vyplnení prvých troch otázok formulára.",
-      "Zobrazia sa až po kliknutí na tlačidlo „Odoslať" ako doplňujúci prieskum.",
-      "Zobrazia sa len vtedy, ak respondent na otázku č. 4 odpovie „Áno"."
+      "Zobrazia sa až po kliknutí na tlačidlo \"Odoslať\" ako doplňujúci prieskum.",
+      "Zobrazia sa len vtedy, ak respondent na otázku č. 4 odpovie \"Áno\"."
     ],
     correct: 3
   },
@@ -120,7 +120,7 @@ const questions = [
     q: "Ktorá časť systému Orbita obsahuje jediné nepovinné polia v celom dotazníku?",
     opts: [
       "Identifikačné údaje o zástupcovi zamestnávateľa na hlavnej obrazovke.",
-      "Dátumy narodenia zamestnancov v sekcii „Základné údaje".",
+      "Dátumy narodenia zamestnancov v sekcii \"Základné údaje\".",
       "Položky pre uvedenie ďalších benefitov v deviatej časti tabuľky A13.",
       "Poznámky k počtu zamestnancov pracujúcich v noci v tabuľke A01."
     ],
@@ -147,7 +147,7 @@ const questions = [
     correct: 2
   },
   {
-    q: "Čo umožňuje respondentovi tlačidlo „Späť" umiestnené vo formulároch?",
+    q: "Čo umožňuje respondentovi tlačidlo \"Späť\" umiestnené vo formulároch?",
     opts: [
       "Vrátiť sa na hlavnú obrazovku bez uloženia práve zadaných dát.",
       "Odvolať už odoslaný a uložený formulár z centrálnej databázy.",
@@ -288,7 +288,7 @@ function saveToSheets() {
     if (el) el.textContent = '⚠️ URL pre Google Sheets nie je nastavené.';
     return;
   }
-  fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+  fetch(SHEET_SCRIPT_URL + '?kviz=orbita', { method: 'POST', body: JSON.stringify(payload) })
     .then(() => { const el = document.getElementById('savingMsg'); if (el) el.textContent = '✓ Výsledky boli uložené.'; })
     .catch(() => { const el = document.getElementById('savingMsg'); if (el) el.textContent = '✗ Ukladanie zlyhalo.'; });
 }
